@@ -150,30 +150,51 @@ async function getAdminStats() {
 // Add a new student to database (WITH LOGIN)
 async function addStudent(studentData) {
     try {
+        // Validate required fields
+        if (!studentData.firstName || !studentData.lastName || !studentData.studentEmail) {
+            return { success: false, error: 'Missing required fields' };
+        }
+        
         // Generate student ID
         const studentId = 'STU' + Date.now().toString().slice(-6);
         
-        // Create Firebase Authentication account for student
-        let userCredential;
+        let userCredential = null;
         let generatedPassword = null;
         
+        // Create Firebase Authentication account for student if requested
         if (studentData.createLogin) {
             // Generate password if not provided
             const password = studentData.password || generatePassword();
             generatedPassword = password;
             
-            // Create user in Firebase Authentication
-            userCredential = await auth.createUserWithEmailAndPassword(
-                studentData.studentEmail, 
-                password
-            );
-            
-            // Send email verification
-            await userCredential.user.sendEmailVerification();
-            
-            // If password was generated, send password reset email
-            if (!studentData.password) {
-                await auth.sendPasswordResetEmail(studentData.studentEmail);
+            try {
+                // Create user in Firebase Authentication
+                userCredential = await auth.createUserWithEmailAndPassword(
+                    studentData.studentEmail, 
+                    password
+                );
+                
+                // Send email verification
+                await userCredential.user.sendEmailVerification();
+                
+                // If password was generated, send password reset email
+                if (!studentData.password) {
+                    await auth.sendPasswordResetEmail(studentData.studentEmail);
+                }
+                
+                // Save user role to Firestore
+                await saveUserRole(
+                    userCredential.user.uid,
+                    studentData.studentEmail,
+                    `${studentData.firstName} ${studentData.lastName}`,
+                    'student',
+                    { studentId: studentId }
+                );
+                
+            } catch (authError) {
+                console.error("Authentication error:", authError);
+                // Continue with student creation even if auth fails
+                // This allows admin to create student record without login
             }
         }
         
@@ -191,23 +212,13 @@ async function addStudent(studentData) {
             parentEmail: studentData.parentEmail,
             studentEmail: studentData.studentEmail,
             homeAddress: studentData.homeAddress,
-            photoURL: studentData.photoURL || '',
+            photoURL: '',
             dateEnrolled: firebase.firestore.FieldValue.serverTimestamp(),
             isActive: true,
-            createdBy: currentUser.uid,
+            hasLoginAccount: studentData.createLogin || false,
+            createdBy: currentUser ? currentUser.uid : 'system',
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
-        
-        // Save user role to Firestore if login was created
-        if (studentData.createLogin && userCredential) {
-            await saveUserRole(
-                userCredential.user.uid,
-                studentData.studentEmail,
-                `${studentData.firstName} ${studentData.lastName}`,
-                'student',
-                { studentId: studentId }
-            );
-        }
         
         return { 
             success: true, 
@@ -225,30 +236,50 @@ async function addStudent(studentData) {
 // Add a new teacher to database (WITH LOGIN)
 async function addTeacher(teacherData) {
     try {
+        // Validate required fields
+        if (!teacherData.name || !teacherData.email) {
+            return { success: false, error: 'Missing required fields' };
+        }
+        
         // Generate teacher ID
         const teacherId = 'TCH' + Date.now().toString().slice(-6);
         
-        // Create Firebase Authentication account for teacher
-        let userCredential;
+        let userCredential = null;
         let generatedPassword = null;
         
+        // Create Firebase Authentication account for teacher
         if (teacherData.createLogin) {
             // Generate password if not provided
             const password = teacherData.password || generatePassword();
             generatedPassword = password;
             
-            // Create user in Firebase Authentication
-            userCredential = await auth.createUserWithEmailAndPassword(
-                teacherData.email, 
-                password
-            );
-            
-            // Send email verification
-            await userCredential.user.sendEmailVerification();
-            
-            // If password was generated, send password reset email
-            if (!teacherData.password) {
-                await auth.sendPasswordResetEmail(teacherData.email);
+            try {
+                // Create user in Firebase Authentication
+                userCredential = await auth.createUserWithEmailAndPassword(
+                    teacherData.email, 
+                    password
+                );
+                
+                // Send email verification
+                await userCredential.user.sendEmailVerification();
+                
+                // If password was generated, send password reset email
+                if (!teacherData.password) {
+                    await auth.sendPasswordResetEmail(teacherData.email);
+                }
+                
+                // Save user role to Firestore
+                await saveUserRole(
+                    userCredential.user.uid,
+                    teacherData.email,
+                    teacherData.name,
+                    'teacher',
+                    { teacherId: teacherId }
+                );
+                
+            } catch (authError) {
+                console.error("Authentication error:", authError);
+                return { success: false, error: `Failed to create login: ${authError.message}` };
             }
         }
         
@@ -263,20 +294,10 @@ async function addTeacher(teacherData) {
             role: 'teacher',
             dateJoined: firebase.firestore.FieldValue.serverTimestamp(),
             isActive: true,
-            createdBy: currentUser.uid,
+            hasLoginAccount: teacherData.createLogin || false,
+            createdBy: currentUser ? currentUser.uid : 'system',
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
-        
-        // Save user role to Firestore if login was created
-        if (teacherData.createLogin && userCredential) {
-            await saveUserRole(
-                userCredential.user.uid,
-                teacherData.email,
-                teacherData.name,
-                'teacher',
-                { teacherId: teacherId }
-            );
-        }
         
         return { 
             success: true, 
@@ -294,10 +315,18 @@ async function addTeacher(teacherData) {
 // Get all students
 async function getAllStudents() {
     try {
-        const snapshot = await db.collection('students').orderBy('dateEnrolled', 'desc').get();
+        const snapshot = await db.collection('students')
+            .orderBy('dateEnrolled', 'desc')
+            .limit(50)
+            .get();
+            
         const students = [];
         snapshot.forEach(doc => {
-            students.push({ id: doc.id, ...doc.data() });
+            const data = doc.data();
+            // Handle both old and new data structures
+            if (data.isActive === undefined || data.isActive === true) {
+                students.push({ id: doc.id, ...data });
+            }
         });
         return students;
     } catch (error) {
@@ -309,10 +338,18 @@ async function getAllStudents() {
 // Get all teachers
 async function getAllTeachers() {
     try {
-        const snapshot = await db.collection('teachers').orderBy('dateJoined', 'desc').get();
+        const snapshot = await db.collection('teachers')
+            .orderBy('dateJoined', 'desc')
+            .limit(50)
+            .get();
+            
         const teachers = [];
         snapshot.forEach(doc => {
-            teachers.push({ id: doc.id, ...doc.data() });
+            const data = doc.data();
+            // Handle both old and new data structures
+            if (data.isActive === undefined || data.isActive === true) {
+                teachers.push({ id: doc.id, ...data });
+            }
         });
         return teachers;
     } catch (error) {
@@ -394,7 +431,11 @@ async function getAllAnnouncements() {
         
         const announcements = [];
         snapshot.forEach(doc => {
-            announcements.push({ id: doc.id, ...doc.data() });
+            const data = doc.data();
+            // Handle both old and new data structures
+            if (data.isActive === undefined || data.isActive === true) {
+                announcements.push({ id: doc.id, ...data });
+            }
         });
         return announcements;
     } catch (error) {
@@ -406,7 +447,10 @@ async function getAllAnnouncements() {
 // Update student information
 async function updateStudent(studentId, updateData) {
     try {
-        await db.collection('students').doc(studentId).update(updateData);
+        await db.collection('students').doc(studentId).update({
+            ...updateData,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
         return { success: true };
     } catch (error) {
         console.error("Error updating student:", error);
@@ -417,7 +461,10 @@ async function updateStudent(studentId, updateData) {
 // Update teacher information
 async function updateTeacher(teacherId, updateData) {
     try {
-        await db.collection('teachers').doc(teacherId).update(updateData);
+        await db.collection('teachers').doc(teacherId).update({
+            ...updateData,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
         return { success: true };
     } catch (error) {
         console.error("Error updating teacher:", error);
@@ -470,6 +517,14 @@ async function handleLogin(email, password, role) {
         // Sign in with Firebase Authentication
         const userCredential = await auth.signInWithEmailAndPassword(email, password);
         const user = userCredential.user;
+        
+        // Check if email is verified (optional)
+        if (!user.emailVerified) {
+            showMessage('Please verify your email address before logging in.', 'warning');
+            // You can choose to allow login without verification
+            // await auth.signOut();
+            // return;
+        }
         
         // Get user role from Firestore
         const userRoleFromDB = await getUserRole(user.uid);
@@ -650,6 +705,11 @@ function checkAuthState() {
                 loadAdminDashboard();
             }
             
+            // If on login page but already logged in, redirect to appropriate dashboard
+            if (window.location.pathname.includes('login.html') && userRole) {
+                redirectBasedOnRole(userRole);
+            }
+            
         } else {
             currentUser = null;
             userRole = null;
@@ -660,9 +720,12 @@ function checkAuthState() {
             
             console.log("User logged out");
             
-            // Redirect to login if on admin dashboard
+            // Redirect to login if on admin dashboard without authentication
             if (window.location.pathname.includes('admin-dashboard.html')) {
-                window.location.href = 'login.html';
+                showMessage('Please login to access admin dashboard', 'warning');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
             }
         }
     });
@@ -686,6 +749,9 @@ async function loadAdminDashboard() {
             return;
         }
         
+        // Update admin info
+        updateAdminInfo();
+        
         // Load statistics
         adminStats = await getAdminStats();
         if (adminStats) {
@@ -696,22 +762,53 @@ async function loadAdminDashboard() {
         const students = await getAllStudents();
         if (students.length > 0) {
             updateRecentStudents(students.slice(0, 10));
+        } else {
+            // Show no data message
+            const container = document.getElementById('recentStudents');
+            if (container) {
+                container.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px; color: var(--gray);">
+                            <i class="fas fa-users-slash"></i> No students found
+                        </td>
+                    </tr>
+                `;
+            }
         }
         
         // Load recent teachers
         const teachers = await getAllTeachers();
         if (teachers.length > 0) {
             updateRecentTeachers(teachers.slice(0, 10));
+        } else {
+            // Show no data message
+            const container = document.getElementById('recentTeachers');
+            if (container) {
+                container.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px; color: var(--gray);">
+                            <i class="fas fa-chalkboard-teacher"></i> No teachers found
+                        </td>
+                    </tr>
+                `;
+            }
         }
         
         // Load announcements
         const announcements = await getAllAnnouncements();
         if (announcements.length > 0) {
             updateRecentAnnouncements(announcements.slice(0, 5));
+        } else {
+            // Show no data message
+            const container = document.getElementById('recentAnnouncements');
+            if (container) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--gray);">
+                        <i class="fas fa-bullhorn"></i> No announcements found
+                    </div>
+                `;
+            }
         }
-        
-        // Set up event listeners for admin dashboard
-        setupAdminEventListeners();
         
         console.log("Admin dashboard loaded successfully");
         
@@ -774,14 +871,14 @@ function updateRecentStudents(students) {
     let html = '';
     students.forEach((student, index) => {
         const date = student.dateEnrolled ? new Date(student.dateEnrolled.seconds * 1000).toLocaleDateString() : 'N/A';
-        const hasLogin = student.studentEmail ? 'Yes' : 'No';
+        const hasLogin = student.hasLoginAccount ? 'Yes' : (student.studentEmail ? 'Yes' : 'No');
+        const email = student.studentEmail || student.email || 'No email';
         html += `
             <tr>
                 <td>${index + 1}</td>
                 <td>${student.fullName || `${student.firstName} ${student.lastName}`}</td>
                 <td>${student.currentClass || 'Not assigned'}</td>
-                <td>${student.gender || 'N/A'}</td>
-                <td>${hasLogin}</td>
+                <td>${email}</td>
                 <td>${date}</td>
                 <td>
                     <button class="btn-action view-student" data-id="${student.id}">
@@ -856,59 +953,19 @@ function updateRecentAnnouncements(announcements) {
     container.innerHTML = html;
 }
 
-// Set up admin dashboard event listeners
-function setupAdminEventListeners() {
-    // Add Student button
-    const addStudentBtn = document.getElementById('addStudentBtn');
-    if (addStudentBtn) {
-        addStudentBtn.addEventListener('click', () => {
-            openAddStudentModal();
-        });
+// Update admin info in dashboard
+function updateAdminInfo() {
+    if (currentUser) {
+        const adminName = document.getElementById('adminName');
+        const adminEmail = document.getElementById('adminEmail');
+        
+        if (adminName) {
+            adminName.textContent = currentUser.displayName || currentUser.email.split('@')[0];
+        }
+        if (adminEmail) {
+            adminEmail.textContent = currentUser.email;
+        }
     }
-    
-    // Add Teacher button
-    const addTeacherBtn = document.getElementById('addTeacherBtn');
-    if (addTeacherBtn) {
-        addTeacherBtn.addEventListener('click', () => {
-            openAddTeacherModal();
-        });
-    }
-    
-    // Add Announcement button
-    const addAnnouncementBtn = document.getElementById('addAnnouncementBtn');
-    if (addAnnouncementBtn) {
-        addAnnouncementBtn.addEventListener('click', () => {
-            openAddAnnouncementModal();
-        });
-    }
-    
-    // Refresh button
-    const refreshBtn = document.getElementById('refreshDashboard');
-    if (refreshBtn) {
-        refreshBtn.addEventListener('click', () => {
-            loadAdminDashboard();
-            showMessage('Dashboard refreshed successfully.', 'success');
-        });
-    }
-}
-
-// Open add student modal
-function openAddStudentModal() {
-    // This will be implemented in the admin dashboard HTML
-    console.log("Opening add student modal");
-    showMessage('Add student functionality will be implemented in the modal.', 'info');
-}
-
-// Open add teacher modal
-function openAddTeacherModal() {
-    console.log("Opening add teacher modal");
-    showMessage('Add teacher functionality will be implemented in the modal.', 'info');
-}
-
-// Open add announcement modal
-function openAddAnnouncementModal() {
-    console.log("Opening add announcement modal");
-    showMessage('Add announcement functionality will be implemented in the modal.', 'info');
 }
 
 // ============================================
@@ -929,7 +986,7 @@ function updateUIForLoggedInUser(email, role) {
     }
     
     // Add user menu if it doesn't exist
-    if (!document.getElementById('userMenu')) {
+    if (!document.getElementById('userMenu') && document.querySelector('.nav-menu .login-btn')) {
         const userMenu = document.createElement('div');
         userMenu.id = 'userMenu';
         userMenu.className = 'user-menu';
@@ -952,9 +1009,7 @@ function updateUIForLoggedInUser(email, role) {
                 <div style="font-size: 12px; color: #666; margin-top: 5px;">Role: ${role}</div>
             </div>
             <div style="padding: 10px 0;">
-                <a href="#" id="dashboardLink" style="display: block; padding: 8px 0; color: #333; text-decoration: none;">
-                    <i class="fas fa-tachometer-alt"></i> Dashboard
-                </a>
+                ${role === 'admin' ? '<a href="admin-dashboard.html" id="dashboardLink" style="display: block; padding: 8px 0; color: #333; text-decoration: none;"><i class="fas fa-tachometer-alt"></i> Dashboard</a>' : ''}
                 <a href="#" id="profileLink" style="display: block; padding: 8px 0; color: #333; text-decoration: none;">
                     <i class="fas fa-user-circle"></i> My Profile
                 </a>
@@ -968,10 +1023,14 @@ function updateUIForLoggedInUser(email, role) {
         
         // Add event listeners
         document.getElementById('logoutLink').addEventListener('click', handleLogout);
-        document.getElementById('dashboardLink').addEventListener('click', (e) => {
-            e.preventDefault();
-            redirectBasedOnRole(role);
-        });
+        
+        const dashboardLink = document.getElementById('dashboardLink');
+        if (dashboardLink) {
+            dashboardLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                redirectBasedOnRole(role);
+            });
+        }
     }
 }
 
@@ -984,7 +1043,7 @@ function showUserMenu() {
         // Close menu when clicking outside
         setTimeout(() => {
             const closeMenu = (e) => {
-                if (!userMenu.contains(e.target) && !document.querySelector('.nav-menu .login-btn').contains(e.target)) {
+                if (userMenu && !userMenu.contains(e.target) && !document.querySelector('.nav-menu .login-btn').contains(e.target)) {
                     userMenu.style.display = 'none';
                     document.removeEventListener('click', closeMenu);
                 }
@@ -1050,14 +1109,20 @@ function redirectBasedOnRole(role) {
         case 'student':
             redirectUrl = 'student-dashboard.html';
             break;
+        default:
+            redirectUrl = 'index.html';
     }
     
     // Show message about redirection
-    showMessage(`Redirecting to ${role} dashboard...`, 'info');
+    if (window.location.pathname.includes('login.html')) {
+        showMessage(`Redirecting to ${role} dashboard...`, 'info');
+    }
     
     // Redirect after delay
     setTimeout(() => {
-        window.location.href = redirectUrl;
+        if (!window.location.pathname.includes(redirectUrl)) {
+            window.location.href = redirectUrl;
+        }
     }, 1500);
 }
 

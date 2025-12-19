@@ -537,40 +537,25 @@
             document.querySelector('.nav-menu').classList.toggle('show');
         });
 
-        // Tab switching functionality
+        // Tab switching functionality - Keep only this minimal version
+        // The main functionality is in app.js
         document.querySelectorAll('.login-tab, .forgot-password').forEach(element => {
-            element.addEventListener('click', function() {
+            element.addEventListener('click', function(e) {
+                e.preventDefault();
                 const tab = this.getAttribute('data-tab');
-                switchTab(tab);
+                if (typeof switchTab === 'function') {
+                    switchTab(tab);
+                }
             });
         });
 
         // Back to sign in link
-        document.querySelector('a[data-tab="login"]').addEventListener('click', function(e) {
+        document.querySelector('a[data-tab="login"]')?.addEventListener('click', function(e) {
             e.preventDefault();
-            switchTab('login');
+            if (typeof switchTab === 'function') {
+                switchTab('login');
+            }
         });
-
-        function switchTab(tabName) {
-            // Update active tab button
-            document.querySelectorAll('.login-tab').forEach(tab => {
-                tab.classList.remove('active');
-                if (tab.getAttribute('data-tab') === tabName) {
-                    tab.classList.add('active');
-                }
-            });
-            
-            // Update active tab content
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-                if (content.id === tabName + 'Tab') {
-                    content.classList.add('active');
-                }
-            });
-            
-            // Clear messages
-            document.getElementById('messageContainer').innerHTML = '';
-        }
 
         // Toggle password visibility
         document.querySelectorAll('.toggle-password').forEach(button => {
@@ -590,34 +575,6 @@
                 }
             });
         });
-
-        // Form submission handled by app.js
-        // These forms are connected in app.js initApp() function
-        
-        // Show message function (for local use)
-        function showMessage(text, type) {
-            const messageContainer = document.getElementById('messageContainer');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${type} show`;
-            messageDiv.innerHTML = `
-                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-                ${text}
-            `;
-            messageContainer.innerHTML = '';
-            messageContainer.appendChild(messageDiv);
-            
-            // Auto-hide success/info messages after 5 seconds
-            if (type !== 'error') {
-                setTimeout(() => {
-                    messageDiv.classList.remove('show');
-                    setTimeout(() => {
-                        if (messageDiv.parentNode === messageContainer) {
-                            messageContainer.removeChild(messageDiv);
-                        }
-                    }, 500);
-                }, 5000);
-            }
-        }
 
         // Check if Firebase is loaded
         document.addEventListener('DOMContentLoaded', function() {

@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter Results - NANA ACADEMY</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Results Entry Specific Styles */
+        .results-page {
+            min-height: 100vh;
+            background-color: #f5f7fa;
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            padding: 25px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .page-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .header-left p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .results-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .selection-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+        }
+        
+        .selection-card h3 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2E7D32;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: white;
+            cursor: pointer;
+        }
+        
+        .form-group select:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+        
+        .btn-load {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-load:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .btn-load:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .results-table-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            display: none;
+        }
+        
+        .results-table-card.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .table-header h3 {
+            color: #4CAF50;
+            font-size: 20px;
+        }
+        
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .results-table th {
+            text-align: left;
+            padding: 15px;
+            background-color: rgba(76, 175, 80, 0.1);
+            color: #2E7D32;
+            font-weight: 600;
+            border-bottom: 2px solid #ddd;
+        }
+        
+        .results-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .results-table input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .results-table input:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.1);
+        }
+        
+        .student-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .student-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(76, 175, 80, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4CAF50;
+        }
+        
+        .student-name {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .btn-save {
+            background: linear-gradient(135deg, #4CAF50, #2E7D32);
+            color: white;
+        }
+        
+        .btn-cancel {
+            background-color: #f0f0f0;
+            color: #666;
+        }
+        
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 60px;
+            color: #666;
+        }
+        
+        .loading i {
+            margin-right: 10px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .selection-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-table {
+                font-size: 14px;
+            }
+            
+            .results-table th,
+            .results-table td {
+                padding: 10px;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body class="results-page">
+    <!-- Page Header -->
+    <header class="page-header">
+        <div class="container">
+            <div class="header-left">
+                <h1>Enter Term Results</h1>
+                <p>NANA ACADEMY Teacher Portal</p>
+            </div>
+            <div class="header-right">
+                <a href="teacher-dashboard.html" class="btn outline-btn" style="background: rgba(255,255,255,0.2); color: white;">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Results Container -->
+    <div class="results-container">
+        <!-- Selection Card -->
+        <div class="selection-card">
+            <h3><i class="fas fa-filter"></i> Select Class and Term</h3>
+            <div class="selection-grid">
+                <div class="form-group">
+                    <label for="selectClass"><i class="fas fa-door-open"></i> Class</label>
+                    <select id="selectClass">
+                        <option value="">Select Class</option>
+                        <option value="creche">Crèche</option>
+                        <option value="nursery1">Nursery 1</option>
+                        <option value="nursery2">Nursery 2</option>
+                        <option value="kg1">KG 1</option>
+                        <option value="kg2">KG 2</option>
+                        <option value="basic1">Basic 1</option>
+                        <option value="basic2">Basic 2</option>
+                        <option value="basic3">Basic 3</option>
+                        <option value="basic4">Basic 4</option>
+                        <option value="basic5">Basic 5</option>
+                        <option value="basic6">Basic 6</option>
+                        <option value="jhs1">JHS 1</option>
+                        <option value="jhs2">JHS 2</option>
+                        <option value="jhs3">JHS 3</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="selectTerm"><i class="fas fa-calendar-alt"></i> Term</label>
+                    <select id="selectTerm">
+                        <option value="">Select Term</option>
+                        <option value="term1">Term 1</option>
+                        <option value="term2">Term 2</option>
+                        <option value="term3">Term 3</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="selectYear"><i class="fas fa-calendar"></i> Academic Year</label>
+                    <select id="selectYear">
+                        <option value="">Select Year</option>
+                        <option value="2023-2024">2023/2024</option>
+                        <option value="2024-2025">2024/2025</option>
+                        <option value="2025-2026">2025/2026</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" style="display: flex; align-items: flex-end;">
+                    <button class="btn-load" id="loadStudentsBtn">
+                        <i class="fas fa-search"></i> Load Students
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Table Card -->
+        <div class="results-table-card" id="resultsTableCard">
+            <div class="table-header">
+                <h3><i class="fas fa-users"></i> Enter Results for <span id="selectedClassDisplay">Selected Class</span></h3>
+                <div>
+                    <span style="color: #666; font-size: 14px;">Term: </span>
+                    <strong id="selectedTermDisplay">Term 1</strong>
+                    <span style="color: #666; font-size: 14px; margin-left: 15px;">Year: </span>
+                    <strong id="selectedYearDisplay">2024/2025</strong>
+                </div>
+            </div>
+            
+            <div class="loading" id="tableLoading">
+                <i class="fas fa-spinner"></i> Loading students...
+            </div>
+            
+            <div id="resultsTableContainer" style="display: none;">
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Class Score (50%)</th>
+                            <th>Exam Score (50%)</th>
+                            <th>Total (100%)</th>
+                            <th>Position</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsTableBody">
+                        <!-- Students will be loaded here -->
+                    </tbody>
+                </table>
+                
+                <div class="form-actions">
+                    <button class="btn btn-cancel" id="cancelBtn">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button class="btn btn-save" id="saveResultsBtn">
+                        <i class="fas fa-save"></i> Save All Results
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages Container -->
+        <div id="messageContainer" style="margin-top: 30px;"></div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+
+    <!-- Our Firebase Configuration -->
+    <script src="firebase-config.js"></script>
+
+    <!-- Our Application Logic -->
+    <script src="app.js"></script>
+    
+    <script>
+        // Results Entry JavaScript
+        let selectedClass = '';
+        let selectedTerm = '';
+        let selectedYear = '';
+        let classStudents = [];
+        
+        // Initialize results page
+        function initResultsPage() {
+            console.log("Initializing results entry page...");
+            
+            // Check if user is teacher
+            firebase.auth().onAuthStateChanged(async (user) => {
+                if (!user) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                const userRole = await getUserRole(user.uid);
+                if (userRole !== 'teacher') {
+                    showMessage('Access denied. Teacher privileges required.', 'error');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                    return;
+                }
+                
+                // Set up event listeners
+                setupEventListeners();
+                
+                // Set current year as default
+                const currentYear = new Date().getFullYear();
+                document.getElementById('selectYear').value = `${currentYear}-${currentYear + 1}`;
+                
+                console.log("Results page initialized");
+            });
+        }
+        
+        // Set up event listeners
+        function setupEventListeners() {
+            // Load Students button
+            document.getElementById('loadStudentsBtn').addEventListener('click', loadClassStudents);
+            
+            // Save Results button
+            document.getElementById('saveResultsBtn').addEventListener('click', saveAllResults);
+            
+            // Cancel button
+            document.getElementById('cancelBtn').addEventListener('click', function() {
+                document.getElementById('resultsTableCard').classList.remove('show');
+                document.getElementById('selectClass').value = '';
+                document.getElementById('selectTerm').value = '';
+            });
+            
+            // Real-time calculation
+            document.addEventListener('input', function(e) {
+                if (e.target.classList.contains('class-score') || e.target.classList.contains('exam-score')) {
+                    calculateStudentResult(e.target);
+                }
+            });
+        }
+        
+        // Load class students
+        async function loadClassStudents() {
+            selectedClass = document.getElementById('selectClass').value;
+            selectedTerm = document.getElementById('selectTerm').value;
+            selectedYear = document.getElementById('selectYear').value;
+            
+            if (!selectedClass || !selectedTerm || !selectedYear) {
+                showMessage('Please select class, term, and academic year.', 'error');
+                return;
+            }
+            
+            const loadBtn = document.getElementById('loadStudentsBtn');
+            loadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+            loadBtn.disabled = true;
+            
+            try {
+                // Get students for selected class
+                const snapshot = await db.collection('students')
+                    .where('currentClass', '==', selectedClass)
+                    .where('isActive', '==', true)
+                    .orderBy('fullName')
+                    .get();
+                
+                if (snapshot.empty) {
+                    showMessage(`No students found in ${selectedClass}.`, 'warning');
+                    loadBtn.innerHTML = '<i class="fas fa-search"></i> Load Students';
+                    loadBtn.disabled = false;
+                    return;
+                }
+                
+                classStudents = [];
+                snapshot.forEach(doc => {
+                    classStudents.push({ id: doc.id, ...doc.data() });
+                });
+                
+                // Update display
+                document.getElementById('selectedClassDisplay').textContent = selectedClass.toUpperCase();
+                document.getElementById('selectedTermDisplay').textContent = selectedTerm.toUpperCase();
+                document.getElementById('selectedYearDisplay').textContent = selectedYear.replace('-', '/');
+                
+                // Show table and load students
+                document.getElementById('resultsTableCard').classList.add('show');
+                document.getElementById('tableLoading').style.display = 'flex';
+                document.getElementById('resultsTableContainer').style.display = 'none';
+                
+                // Load existing results if any
+                await loadExistingResults();
+                
+                // Build results table
+                buildResultsTable();
+                
+                // Hide loading, show table
+                document.getElementById('tableLoading').style.display = 'none';
+                document.getElementById('resultsTableContainer').style.display = 'block';
+                
+                showMessage(`Loaded ${classStudents.length} students from ${selectedClass}.`, 'success');
+                
+            } catch (error) {
+                console.error("Error loading students:", error);
+                showMessage(`Error loading students: ${error.message}`, 'error');
+            } finally {
+                loadBtn.innerHTML = '<i class="fas fa-search"></i> Load Students';
+                loadBtn.disabled = false;
+            }
+        }
+        
+        // Load existing results
+        async function loadExistingResults() {
+            try {
+                // This will be implemented when we create the results database structure
+                // For now, we'll just initialize empty results
+                classStudents.forEach(student => {
+                    student.results = {
+                        classScore: '',
+                        examScore: '',
+                        total: '',
+                        position: '',
+                        remarks: ''
+                    };
+                });
+                
+            } catch (error) {
+                console.error("Error loading existing results:", error);
+            }
+        }
+        
+        // Build results table
+        function buildResultsTable() {
+            const tableBody = document.getElementById('resultsTableBody');
+            let html = '';
+            
+            classStudents.forEach((student, index) => {
+                const studentName = student.fullName || `${student.firstName} ${student.lastName}`;
+                const studentNumber = index + 1;
+                
+                html += `
+                    <tr data-student-id="${student.id}">
+                        <td>
+                            <div class="student-info">
+                                <div class="student-avatar">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <div class="student-name">${studentName}</div>
+                                    <div style="font-size: 12px; color: #666;">No. ${studentNumber}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <input type="number" class="class-score" min="0" max="50" 
+                                   value="${student.results.classScore || ''}" 
+                                   placeholder="0-50" data-student-index="${index}">
+                        </td>
+                        <td>
+                            <input type="number" class="exam-score" min="0" max="50" 
+                                   value="${student.results.examScore || ''}" 
+                                   placeholder="0-50" data-student-index="${index}">
+                        </td>
+                        <td class="total-score" data-student-index="${index}">
+                            ${student.results.total || '0'}
+                        </td>
+                        <td class="position" data-student-index="${index}">
+                            ${student.results.position || ''}
+                        </td>
+                        <td class="remarks" data-student-index="${index}">
+                            ${student.results.remarks || ''}
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tableBody.innerHTML = html;
+        }
+        
+        // Calculate student result
+        function calculateStudentResult(input) {
+            const studentIndex = input.getAttribute('data-student-index');
+            const student = classStudents[studentIndex];
+            
+            const classScore = parseFloat(document.querySelector(`.class-score[data-student-index="${studentIndex}"]`).value) || 0;
+            const examScore = parseFloat(document.querySelector(`.exam-score[data-student-index="${studentIndex}"]`).value) || 0;
+            
+            // Validate scores
+            if (classScore > 50) {
+                showMessage('Class score cannot exceed 50.', 'warning');
+                document.querySelector(`.class-score[data-student-index="${studentIndex}"]`).value = 50;
+                classScore = 50;
+            }
+            
+            if (examScore > 50) {
+                showMessage('Exam score cannot exceed 50.', 'warning');
+                document.querySelector(`.exam-score[data-student-index="${studentIndex}"]`).value = 50;
+                examScore = 50;
+            }
+            
+            // Calculate total
+            const total = classScore + examScore;
+            
+            // Update display
+            document.querySelector(`.total-score[data-student-index="${studentIndex}"]`).textContent = total;
+            
+            // Update student object
+            student.results.classScore = classScore;
+            student.results.examScore = examScore;
+            student.results.total = total;
+            student.results.remarks = calculateRemarks(total);
+            
+            // Update position (will be calculated when saving)
+        }
+        
+        // Calculate remarks based on total score
+        function calculateRemarks(total) {
+            if (total >= 80) return 'High Proficiency';
+            if (total >= 70) return 'Proficiency';
+            if (total >= 60) return 'Approaching Proficiency';
+            if (total >= 50) return 'Approaching Proficiency';
+            if (total >= 41) return 'Emerging';
+            return 'Emerging';
+        }
+        
+        // Save all results
+        async function saveAllResults() {
+            const saveBtn = document.getElementById('saveResultsBtn');
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            saveBtn.disabled = true;
+            
+            try {
+                // Calculate positions
+                calculatePositions();
+                
+                // Save each student's results
+                const batch = db.batch();
+                const resultsCollection = db.collection('results');
+                
+                for (const student of classStudents) {
+                    if (student.results.classScore !== '' && student.results.examScore !== '') {
+                        const resultId = `${student.id}_${selectedYear}_${selectedTerm}`;
+                        const resultRef = resultsCollection.doc(resultId);
+                        
+                        const resultData = {
+                            studentId: student.id,
+                            studentName: student.fullName || `${student.firstName} ${student.lastName}`,
+                            className: selectedClass,
+                            academicYear: selectedYear,
+                            term: selectedTerm,
+                            classScore: parseFloat(student.results.classScore),
+                            examScore: parseFloat(student.results.examScore),
+                            totalScore: parseFloat(student.results.total),
+                            position: parseInt(student.results.position),
+                            remarks: student.results.remarks,
+                            enteredBy: firebase.auth().currentUser.uid,
+                            enteredAt: firebase.firestore.FieldValue.serverTimestamp(),
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        };
+                        
+                        batch.set(resultRef, resultData, { merge: true });
+                    }
+                }
+                
+                await batch.commit();
+                
+                showMessage(`Results saved successfully for ${selectedClass} ${selectedTerm} ${selectedYear}!`, 'success');
+                
+                // Reset form after 2 seconds
+                setTimeout(() => {
+                    document.getElementById('resultsTableCard').classList.remove('show');
+                    document.getElementById('selectClass').value = '';
+                    document.getElementById('selectTerm').value = '';
+                    saveBtn.innerHTML = '<i class="fas fa-save"></i> Save All Results';
+                    saveBtn.disabled = false;
+                }, 2000);
+                
+            } catch (error) {
+                console.error("Error saving results:", error);
+                showMessage(`Error saving results: ${error.message}`, 'error');
+                saveBtn.innerHTML = '<i class="fas fa-save"></i> Save All Results';
+                saveBtn.disabled = false;
+            }
+        }
+        
+        // Calculate positions based on total scores
+        function calculatePositions() {
+            // Filter students with valid scores
+            const studentsWithScores = classStudents.filter(s => 
+                s.results.classScore !== '' && s.results.examScore !== ''
+            );
+            
+            // Sort by total score descending
+            studentsWithScores.sort((a, b) => b.results.total - a.results.total);
+            
+            // Assign positions (handle ties)
+            let currentPosition = 1;
+            let previousScore = null;
+            let skipCount = 0;
+            
+            for (let i = 0; i < studentsWithScores.length; i++) {
+                const student = studentsWithScores[i];
+                
+                if (previousScore !== null && student.results.total === previousScore) {
+                    // Same score as previous student - same position
+                    student.results.position = currentPosition;
+                    skipCount++;
+                } else {
+                    // Different score - increment position
+                    currentPosition += 1 + skipCount;
+                    student.results.position = currentPosition;
+                    skipCount = 0;
+                }
+                
+                previousScore = student.results.total;
+                
+                // Update display
+                const studentIndex = classStudents.findIndex(s => s.id === student.id);
+                if (studentIndex !== -1) {
+                    document.querySelector(`.position[data-student-index="${studentIndex}"]`).textContent = 
+                        student.results.position;
+                    document.querySelector(`.remarks[data-student-index="${studentIndex}"]`).textContent = 
+                        student.results.remarks;
+                }
+            }
+        }
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initResultsPage);
+    </script>
+</body>
+</html>

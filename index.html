@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NANA ACADEMY - Home</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header class="header">
+        <div class="container">
+            <div class="logo-section">
+                <div class="logo-placeholder">
+                    <i class="fas fa-school logo-icon"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>NANA ACADEMY</h1>
+                    <p class="motto">Excellence in Education</p>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="index.html" class="active"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+                    <li><a href="staff.html"><i class="fas fa-chalkboard-teacher"></i> Staff</a></li>
+                    <li><a href="contact.html"><i class="fas fa-address-book"></i> Contact</a></li>
+                    <li><a href="login.html" class="login-btn"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                </ul>
+            </nav>
+            
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2>Welcome to NANA ACADEMY</h2>
+                <p>Providing quality education for a brighter future. Where every child's potential is nurtured and developed.</p>
+                <div class="hero-buttons">
+                    <a href="login.html" class="btn primary-btn">Student Portal</a>
+                    <a href="login.html" class="btn secondary-btn">Staff Login</a>
+                    <a href="contact.html" class="btn outline-btn">Apply Now</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="image-placeholder">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Links Section -->
+    <section class="quick-links">
+        <div class="container">
+            <h3>Quick Access</h3>
+            <div class="links-grid">
+                <a href="#" class="link-card">
+                    <div class="link-icon">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    <h4>Announcements</h4>
+                    <p>Latest school news and events</p>
+                </a>
+                
+                <a href="#" class="link-card">
+                    <div class="link-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h4>School Calendar</h4>
+                    <p>Term dates and holidays</p>
+                </a>
+                
+                <a href="#" class="link-card">
+                    <div class="link-icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <h4>Downloads</h4>
+                    <p>Forms and resources</p>
+                </a>
+                
+                <a href="#" class="link-card">
+                    <div class="link-icon">
+                        <i class="fas fa-images"></i>
+                    </div>
+                    <h4>Gallery</h4>
+                    <p>School photos and events</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>NANA ACADEMY</h3>
+                    <p>Building future leaders through quality education</p>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="staff.html">Our Staff</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-contact">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> School Address Here</p>
+                    <p><i class="fas fa-phone"></i> (123) 456-7890</p>
+                    <p><i class="fas fa-envelope"></i> info@nanaacademy.edu</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 NANA ACADEMY. All rights reserved.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+
+    <!-- Our Firebase Configuration -->
+    <script src="firebase-config.js"></script>
+
+    <!-- Our Application Logic -->
+    <script src="app.js"></script>
+    
+    <script>
+        // Simple mobile menu toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            document.querySelector('.nav-menu').classList.toggle('show');
+        });
+        
+        // Check if user is logged in and update UI
+        document.addEventListener('DOMContentLoaded', function() {
+            // This will be implemented in app.js later
+            // For now, it's just a placeholder
+            console.log("Page loaded, Firebase should be initialized");
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - NANA ACADEMY</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Additional styles for login page */
+        .login-page {
+            min-height: calc(100vh - 400px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 0;
+            background-color: var(--light-blue);
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 450px;
+        }
+        
+        .login-box {
+            background-color: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .login-header {
+            background: linear-gradient(135deg, var(--bright-blue), var(--sky-blue));
+            color: var(--white);
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .login-header h2 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        .login-header p {
+            opacity: 0.9;
+            font-size: 16px;
+        }
+        
+        .login-body {
+            padding: 40px 30px;
+        }
+        
+        .login-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--light-gray);
+        }
+        
+        .login-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .login-tab.active {
+            color: var(--bright-blue);
+            border-bottom-color: var(--bright-blue);
+        }
+        
+        .login-tab:hover:not(.active) {
+            color: var(--dark-blue);
+            background-color: var(--light-blue);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .login-form .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .login-form label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark-blue);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .login-form input,
+        .login-form select {
+            width: 100%;
+            padding: 14px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+        
+        .login-form input:focus,
+        .login-form select:focus {
+            outline: none;
+            border-color: var(--sky-blue);
+            box-shadow: 0 0 0 3px rgba(77, 166, 255, 0.1);
+        }
+        
+        .password-input {
+            position: relative;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--gray);
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .remember-me input {
+            width: auto;
+            transform: scale(1.2);
+        }
+        
+        .remember-me label {
+            margin-bottom: 0;
+            font-weight: normal;
+            color: var(--gray);
+        }
+        
+        .forgot-password {
+            color: var(--bright-blue);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .forgot-password:hover {
+            color: var(--dark-blue);
+            text-decoration: underline;
+        }
+        
+        .login-btn-full {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--bright-blue), var(--sky-blue));
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .login-btn-full:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 102, 204, 0.3);
+        }
+        
+        .login-btn-full:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .divider {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: var(--light-gray);
+        }
+        
+        .divider span {
+            background-color: var(--white);
+            padding: 0 20px;
+            color: var(--gray);
+            position: relative;
+        }
+        
+        .role-selection {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .role-option {
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .role-option input {
+            display: none;
+        }
+        
+        .role-label {
+            display: block;
+            padding: 15px;
+            text-align: center;
+            background-color: var(--light-blue);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .role-option input:checked + .role-label {
+            background-color: var(--bright-blue);
+            color: var(--white);
+            border-color: var(--bright-blue);
+        }
+        
+        .role-label i {
+            font-size: 24px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .message.show {
+            display: block;
+        }
+        
+        .message.success {
+            background-color: rgba(40, 167, 69, 0.1);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            color: var(--success-green);
+        }
+        
+        .message.error {
+            background-color: rgba(220, 53, 69, 0.1);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            color: #dc3545;
+        }
+        
+        .message.info {
+            background-color: rgba(23, 162, 184, 0.1);
+            border: 1px solid rgba(23, 162, 184, 0.3);
+            color: var(--info-cyan);
+        }
+        
+        .login-note {
+            text-align: center;
+            margin-top: 25px;
+            padding: 15px;
+            background-color: var(--light-blue);
+            border-radius: 8px;
+            border-left: 4px solid var(--bright-blue);
+        }
+        
+        .login-note h4 {
+            color: var(--bright-blue);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .login-note p {
+            color: var(--gray);
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 480px) {
+            .login-header {
+                padding: 30px 20px;
+            }
+            
+            .login-body {
+                padding: 30px 20px;
+            }
+            
+            .form-options {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .role-selection {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header class="header">
+        <div class="container">
+            <div class="logo-section">
+                <div class="logo-placeholder">
+                    <i class="fas fa-school logo-icon"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>NANA ACADEMY</h1>
+                    <p class="motto">Excellence in Education</p>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+                    <li><a href="staff.html"><i class="fas fa-chalkboard-teacher"></i> Staff</a></li>
+                    <li><a href="contact.html"><i class="fas fa-address-book"></i> Contact</a></li>
+                    <li><a href="login.html" class="active login-btn"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                </ul>
+            </nav>
+            
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Login Page Content -->
+    <section class="login-page">
+        <div class="container login-container">
+            <div class="login-box">
+                <div class="login-header">
+                    <h2>NANA ACADEMY Portal</h2>
+                    <p>Secure login for authorized users only</p>
+                </div>
+                
+                <div class="login-body">
+                    <!-- Login Tabs - REMOVED REGISTRATION TAB -->
+                    <div class="login-tabs">
+                        <button class="login-tab active" data-tab="login">Sign In</button>
+                        <button class="login-tab" data-tab="reset">Reset Password</button>
+                    </div>
+                    
+                    <!-- Messages Container -->
+                    <div id="messageContainer"></div>
+                    
+                    <!-- Login Tab -->
+                    <div id="loginTab" class="tab-content active">
+                        <form id="loginForm" class="login-form">
+                            <div class="form-group">
+                                <label for="loginEmail"><i class="fas fa-envelope"></i> Email Address</label>
+                                <input type="email" id="loginEmail" required placeholder="Enter your school email">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="loginPassword"><i class="fas fa-lock"></i> Password</label>
+                                <div class="password-input">
+                                    <input type="password" id="loginPassword" required placeholder="Enter your password">
+                                    <button type="button" class="toggle-password" data-target="loginPassword">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="loginRole"><i class="fas fa-user-tag"></i> Login as:</label>
+                                <select id="loginRole" required>
+                                    <option value="">Select your role</option>
+                                    <option value="student">Student</option>
+                                    <option value="teacher">Teacher</option>
+                                    <option value="admin">Administrator</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-options">
+                                <div class="remember-me">
+                                    <input type="checkbox" id="rememberMe">
+                                    <label for="rememberMe">Remember me</label>
+                                </div>
+                                <button type="button" class="forgot-password" data-tab="reset">
+                                    Forgot Password?
+                                </button>
+                            </div>
+                            
+                            <button type="submit" class="login-btn-full" id="loginSubmit">
+                                <i class="fas fa-sign-in-alt"></i> Sign In
+                            </button>
+                            
+                            <!-- Information Note -->
+                            <div class="login-note">
+                                <h4><i class="fas fa-info-circle"></i> Important Information</h4>
+                                <p>• Student and teacher accounts are created by school administration</p>
+                                <p>• If you need an account, please contact the school office</p>
+                                <p>• For login issues, email: support@nanaacademy.edu</p>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Password Reset Tab -->
+                    <div id="resetTab" class="tab-content">
+                        <form id="resetForm" class="login-form">
+                            <div class="form-group">
+                                <label for="resetEmail"><i class="fas fa-envelope"></i> Email Address</label>
+                                <input type="email" id="resetEmail" required placeholder="Enter your registered email">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="resetRole"><i class="fas fa-user-tag"></i> Account Type</label>
+                                <select id="resetRole" required>
+                                    <option value="">Select your account type</option>
+                                    <option value="student">Student</option>
+                                    <option value="teacher">Teacher</option>
+                                    <option value="admin">Administrator</option>
+                                </select>
+                            </div>
+                            
+                            <button type="submit" class="login-btn-full" id="resetSubmit">
+                                <i class="fas fa-key"></i> Send Reset Link
+                            </button>
+                            
+                            <div style="text-align: center; margin-top: 20px;">
+                                <a href="#" data-tab="login" style="color: var(--bright-blue); text-decoration: none; font-weight: 600;">
+                                    <i class="fas fa-arrow-left"></i> Back to Sign In
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>NANA ACADEMY</h3>
+                    <p>Building future leaders through quality education</p>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="staff.html">Our Staff</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-contact">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> School Address Here</p>
+                    <p><i class="fas fa-phone"></i> (123) 456-7890</p>
+                    <p><i class="fas fa-envelope"></i> info@nanaacademy.edu</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 NANA ACADEMY. All rights reserved.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+
+    <!-- Our Firebase Configuration -->
+    <script src="firebase-config.js"></script>
+
+    <!-- Our Application Logic -->
+    <script src="app.js"></script>
+    
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            document.querySelector('.nav-menu').classList.toggle('show');
+        });
+
+        // Tab switching functionality
+        document.querySelectorAll('.login-tab, .forgot-password').forEach(element => {
+            element.addEventListener('click', function() {
+                const tab = this.getAttribute('data-tab');
+                switchTab(tab);
+            });
+        });
+
+        // Back to sign in link
+        document.querySelector('a[data-tab="login"]').addEventListener('click', function(e) {
+            e.preventDefault();
+            switchTab('login');
+        });
+
+        function switchTab(tabName) {
+            // Update active tab button
+            document.querySelectorAll('.login-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.getAttribute('data-tab') === tabName) {
+                    tab.classList.add('active');
+                }
+            });
+            
+            // Update active tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+                if (content.id === tabName + 'Tab') {
+                    content.classList.add('active');
+                }
+            });
+            
+            // Clear messages
+            document.getElementById('messageContainer').innerHTML = '';
+        }
+
+        // Toggle password visibility
+        document.querySelectorAll('.toggle-password').forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const passwordInput = document.getElementById(targetId);
+                const icon = this.querySelector('i');
+                
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        });
+
+        // Form submission handled by app.js
+        // These forms are connected in app.js initApp() function
+        
+        // Show message function (for local use)
+        function showMessage(text, type) {
+            const messageContainer = document.getElementById('messageContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type} show`;
+            messageDiv.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                ${text}
+            `;
+            messageContainer.innerHTML = '';
+            messageContainer.appendChild(messageDiv);
+            
+            // Auto-hide success/info messages after 5 seconds
+            if (type !== 'error') {
+                setTimeout(() => {
+                    messageDiv.classList.remove('show');
+                    setTimeout(() => {
+                        if (messageDiv.parentNode === messageContainer) {
+                            messageContainer.removeChild(messageDiv);
+                        }
+                    }, 500);
+                }, 5000);
+            }
+        }
+
+        // Check if Firebase is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof firebase !== 'undefined') {
+                console.log("Firebase is loaded and ready for authentication");
+            } else {
+                console.error("Firebase is not loaded. Check your Firebase configuration.");
+            }
+        });
+    </script>
+</body>
+</html>

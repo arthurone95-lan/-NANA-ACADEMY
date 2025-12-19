@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - NANA ACADEMY</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header class="header">
+        <div class="container">
+            <div class="logo-section">
+                <div class="logo-placeholder">
+                    <i class="fas fa-school logo-icon"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>NANA ACADEMY</h1>
+                    <p class="motto">Excellence in Education</p>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
+                    <li><a href="staff.html"><i class="fas fa-chalkboard-teacher"></i> Staff</a></li>
+                    <li><a href="contact.html" class="active"><i class="fas fa-address-book"></i> Contact</a></li>
+                    <li><a href="login.html" class="login-btn"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+                </ul>
+            </nav>
+            
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contact Hero Section -->
+    <section class="page-hero">
+        <div class="container">
+            <h2>Contact NANA ACADEMY</h2>
+            <p>Get in touch with us for inquiries, admissions, or feedback</p>
+        </div>
+    </section>
+
+    <!-- Contact Information Section -->
+    <section class="contact-info-section">
+        <div class="container">
+            <div class="section-header">
+                <h3>Our Contact Information</h3>
+                <div class="underline"></div>
+                <p class="section-subtitle">We're here to help you. Reach out through any of these channels.</p>
+            </div>
+            
+            <div class="contact-methods">
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h4>Visit Our Campus</h4>
+                    <p>123 Education Street<br>
+                    Academic City, AC 1001<br>
+                    Ghana</p>
+                    <a href="#" class="contact-link">
+                        <i class="fas fa-directions"></i> Get Directions
+                    </a>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <h4>Call Us</h4>
+                    <p>Main Office: (233) 123-456-7890<br>
+                    Admissions: (233) 123-456-7891<br>
+                    Fax: (233) 123-456-7892</p>
+                    <a href="tel:+2331234567890" class="contact-link">
+                        <i class="fas fa-phone-alt"></i> Call Now
+                    </a>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h4>Email Us</h4>
+                    <p>General: info@nanaacademy.edu<br>
+                    Admissions: admissions@nanaacademy.edu<br>
+                    Support: support@nanaacademy.edu</p>
+                    <a href="mailto:info@nanaacademy.edu" class="contact-link">
+                        <i class="fas fa-paper-plane"></i> Send Email
+                    </a>
+                </div>
+                
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h4>Office Hours</h4>
+                    <p>Monday - Friday: 7:30 AM - 4:30 PM<br>
+                    Saturday: 8:00 AM - 1:00 PM<br>
+                    Sunday: Closed</p>
+                    <div class="emergency-contact">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>Emergency: (233) 123-456-7777</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Location Map & Inquiry Form -->
+    <section class="map-form-section">
+        <div class="container">
+            <div class="map-form-grid">
+                <!-- Map Section -->
+                <div class="map-section">
+                    <h3><i class="fas fa-map"></i> Our Location</h3>
+                    <div class="map-container">
+                        <!-- This is a placeholder map. We'll replace with real Google Maps later -->
+                        <div class="map-placeholder">
+                            <div class="map-marker">
+                                <i class="fas fa-map-pin"></i>
+                            </div>
+                            <div class="map-address">
+                                <h4>NANA ACADEMY Campus</h4>
+                                <p>123 Education Street, Academic City</p>
+                                <button class="btn map-btn" id="viewMapBtn">
+                                    <i class="fas fa-external-link-alt"></i> Open in Google Maps
+                                </button>
+                            </div>
+                        </div>
+                        <p class="map-note">Note: This is a sample location. Update with your actual school address.</p>
+                    </div>
+                    
+                    <!-- WhatsApp Quick Contact -->
+                    <div class="whatsapp-section">
+                        <div class="whatsapp-header">
+                            <i class="fab fa-whatsapp"></i>
+                            <h4>Quick WhatsApp Inquiry</h4>
+                        </div>
+                        <p>Get instant responses for admissions and general inquiries via WhatsApp.</p>
+                        <a href="https://wa.me/2331234567890?text=Hello%20NANA%20ACADEMY,%20I%20have%20an%20inquiry" 
+                           class="whatsapp-btn" target="_blank">
+                            <i class="fab fa-whatsapp"></i> Chat on WhatsApp
+                        </a>
+                        <p class="whatsapp-note">Click to start a conversation with our admissions team</p>
+                    </div>
+                </div>
+                
+                <!-- Inquiry Form -->
+                <div class="form-section">
+                    <h3><i class="fas fa-comment-dots"></i> Send Us a Message</h3>
+                    <p class="form-subtitle">Fill out the form below and we'll get back to you within 24 hours.</p>
+                    
+                    <form id="inquiryForm" class="inquiry-form">
+                        <div class="form-group">
+                            <label for="fullName"><i class="fas fa-user"></i> Full Name *</label>
+                            <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email"><i class="fas fa-envelope"></i> Email Address *</label>
+                                <input type="email" id="email" name="email" required placeholder="your@email.com">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="phone"><i class="fas fa-phone"></i> Phone Number *</label>
+                                <input type="tel" id="phone" name="phone" required placeholder="(233) 123-456-7890">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject"><i class="fas fa-tag"></i> Inquiry Subject *</label>
+                            <select id="subject" name="subject" required>
+                                <option value="">Select a subject</option>
+                                <option value="admission">Admissions & Enrollment</option>
+                                <option value="academic">Academic Information</option>
+                                <option value="fee">Fee Structure & Payment</option>
+                                <option value="staff">Staff Recruitment</option>
+                                <option value="visit">Schedule a Campus Visit</option>
+                                <option value="other">Other Inquiry</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="studentName"><i class="fas fa-graduation-cap"></i> Student Name (if applicable)</label>
+                            <input type="text" id="studentName" name="studentName" placeholder="Name of student">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message"><i class="fas fa-edit"></i> Your Message *</label>
+                            <textarea id="message" name="message" rows="5" required placeholder="Please type your message here..."></textarea>
+                        </div>
+                        
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="newsletter" name="newsletter">
+                            <label for="newsletter">Subscribe to our newsletter for updates and announcements</label>
+                        </div>
+                        
+                        <div class="form-buttons">
+                            <button type="submit" class="btn primary-btn submit-btn">
+                                <i class="fas fa-paper-plane"></i> Send Message
+                            </button>
+                            <button type="reset" class="btn outline-btn">
+                                <i class="fas fa-redo"></i> Clear Form
+                            </button>
+                        </div>
+                        
+                        <p class="form-note">* Required fields. We respect your privacy and will not share your information.</p>
+                    </form>
+                    
+                    <div id="formMessage" class="form-message"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Frequently Asked Questions -->
+    <section class="faq-section">
+        <div class="container">
+            <div class="section-header">
+                <h3>Frequently Asked Questions</h3>
+                <div class="underline"></div>
+                <p class="section-subtitle">Quick answers to common inquiries</p>
+            </div>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>What are the school hours?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Regular school hours are from 7:30 AM to 2:30 PM, Monday through Friday. Extra-curricular activities may extend until 4:30 PM.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>How do I apply for admission?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>You can apply online through our website, visit our admissions office, or contact us via WhatsApp. Required documents include birth certificate, previous school reports, and passport photos.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>What is the fee structure?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Fees vary by grade level. Please contact our admissions office for the current fee structure, payment plans, and available scholarships.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h4>Do you offer transportation services?</h4>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, we offer school bus services covering major routes. Contact our transport office for routes, schedules, and fees.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>NANA ACADEMY</h3>
+                    <p>Building future leaders through quality education</p>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="staff.html">Our Staff</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-contact">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Education Street, Academic City</p>
+                    <p><i class="fas fa-phone"></i> (233) 123-456-7890</p>
+                    <p><i class="fas fa-envelope"></i> info@nanaacademy.edu</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 NANA ACADEMY. All rights reserved.</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="https://wa.me/2331234567890" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+        <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+
+    <!-- Our Firebase Configuration -->
+    <script src="firebase-config.js"></script>
+
+    <!-- Our Application Logic -->
+    <script src="app.js"></script>
+    
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            document.querySelector('.nav-menu').classList.toggle('show');
+        });
+
+        // FAQ toggle functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const answer = question.nextElementSibling;
+                const icon = question.querySelector('i');
+                
+                // Toggle current FAQ
+                answer.classList.toggle('show');
+                icon.classList.toggle('rotate');
+                
+                // Close other FAQs
+                document.querySelectorAll('.faq-answer').forEach(otherAnswer => {
+                    if (otherAnswer !== answer && otherAnswer.classList.contains('show')) {
+                        otherAnswer.classList.remove('show');
+                        otherAnswer.previousElementSibling.querySelector('i').classList.remove('rotate');
+                    }
+                });
+            });
+        });
+
+        // Form submission handling
+        document.getElementById('inquiryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formMessage = document.getElementById('formMessage');
+            const submitBtn = document.querySelector('.submit-btn');
+            
+            // Show loading state
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            submitBtn.disabled = true;
+            
+            // Simulate form submission (we'll connect to Firebase later)
+            setTimeout(() => {
+                formMessage.innerHTML = `
+                    <div class="success-message">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <h4>Message Sent Successfully!</h4>
+                            <p>Thank you for contacting NANA ACADEMY. We have received your inquiry and will respond within 24 hours.</p>
+                            <p>You can also reach us immediately via WhatsApp for urgent matters.</p>
+                        </div>
+                    </div>
+                `;
+                formMessage.classList.add('show');
+                
+                // Reset form and button
+                this.reset();
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+                submitBtn.disabled = false;
+                
+                // Scroll to message
+                formMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                
+                // Hide message after 10 seconds
+                setTimeout(() => {
+                    formMessage.classList.remove('show');
+                }, 10000);
+            }, 1500);
+        });
+
+        // Open Google Maps button
+        document.getElementById('viewMapBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('In the final version, this will open Google Maps with your school location.\nFor now, you can update the link in the code with your actual address.');
+            // This would typically be: window.open('https://maps.google.com/?q=Your+School+Address');
+        });
+
+        // Initialize all FAQs to be closed
+        document.querySelectorAll('.faq-answer').forEach(answer => {
+            answer.classList.remove('show');
+        });
+    </script>
+</body>
+</html>
